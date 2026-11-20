@@ -1,11 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { Application, JobListing, JobsFetchState } from "../types";
-import { useLocalStorage, useDebounce } from "../hooks";
-import { fetchFallbackJobs, fetchRemoteJobs } from "../services/jobService";
-import { calcSkillMatch, isDuplicateApplication } from "../utils";
-import { SkillProfile } from "../components/SkillProfile";
-import { JobSearchBar } from "../components/JobSearchBar";
-import { JobList } from "../components/JobList";
+import type {
+  Application,
+  JobListing,
+  JobsFetchState,
+} from "./types";
+import { useLocalStorage, useDebounce } from "./hooks";
+import { fetchFallbackJobs, fetchRemoteJobs } from "./services/jobService";
+import { calcSkillMatch } from "./utils/skillMatch";
+import { isDuplicateApplication } from "./utils/duplicate";
+import { SkillProfile } from "./components/SkillProfile";
+import { JobSearchBar } from "./components/JobSearchBar";
+import { JobList } from "./components/JobList";
 
 const DEFAULT_SKILLS = ["React", "TypeScript", "CSS"];
 
@@ -22,7 +27,6 @@ export default function App() {
 
   // Sumber data: "remote" (Remotive API) atau "fallback" (lokal).
   const [source, setSource] = useState<"remote" | "fallback">("remote");
-  const [jobs, setJobs] = useState<JobListing[]>([]);
   const [fetchState, setFetchState] = useState<JobsFetchState>({
     kind: "loading",
   });
@@ -39,8 +43,7 @@ export default function App() {
     const fetcher =
       source === "remote" ? fetchRemoteJobs : fetchFallbackJobs;
     fetcher(controller.signal)
-      .then((result) => {
-        setJobs(result);
+      .then((result: JobListing[]) => {
         setFetchState({ kind: "success", jobs: result });
       })
       .catch((err: unknown) => {
@@ -88,7 +91,7 @@ export default function App() {
           },
         ],
       };
-      setApplications((prev) => [...prev, newApplication]);
+      setApplications((prev: Application[]) => [...prev, newApplication]);
     },
     [applications, setApplications],
   );

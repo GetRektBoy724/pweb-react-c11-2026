@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import type { JobListing } from "../types";
 import { useDebounce } from "../hooks";
 
 interface JobSearchBarProps {
