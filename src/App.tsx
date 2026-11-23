@@ -17,6 +17,7 @@ import { WarRoom } from "./components/WarRoom";
 import { ApplicationDetail } from "./components/ApplicationDetail";
 import { DashboardStats } from "./components/DashboardStats";
 import { OfferComparator } from "./components/OfferComparator";
+import { InterviewPrepTimer } from "./components/InterviewPrepTimer";
 import { calculateApplicationStatistics } from "./utils/dashboard";
 import "./styles/warroom.css";
 
@@ -312,7 +313,7 @@ export default function App() {
               onDelete={deleteApplication}
               onClose={() => setSelectedId(null)}
             >
-              {/* TODO Member 3: <InterviewPrepTimer /> dipasang di sini */}
+              <InterviewPrepTimer />
             </ApplicationDetail>
           )}
         </>
