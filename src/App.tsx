@@ -18,9 +18,12 @@ import { ApplicationDetail } from "./components/ApplicationDetail";
 import { DashboardStats } from "./components/DashboardStats";
 import { OfferComparator } from "./components/OfferComparator";
 import { InterviewPrepTimer } from "./components/InterviewPrepTimer";
+import { DataBackupControls } from "./components/DataBackupControls";
 import { calculateApplicationStatistics } from "./utils/dashboard";
+import type { ApplicationBackup } from "./utils/backup";
 import "./styles/warroom.css";
 import "./styles/undo-toast.css";
+import "./styles/theme.css";
 
 const DEFAULT_SKILLS = ["React", "TypeScript", "CSS"];
 
@@ -40,6 +43,10 @@ export default function App() {
     "pweb-c11-kapten-skills",
     DEFAULT_SKILLS,
   );
+  const [isDarkMode, setIsDarkMode] = useLocalStorage<boolean>(
+    "pweb-c11-dark-mode",
+    false,
+  );
 
   // [Member 2] Navigasi tab + lamaran yang sedang dibuka di panel detail.
   const [view, setView] = useState<View>("explore");
@@ -48,6 +55,7 @@ export default function App() {
   const [undoSecondsLeft, setUndoSecondsLeft] = useState(0);
   const deleteTimeoutRef = useRef<number | null>(null);
   const countdownIntervalRef = useRef<number | null>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Sumber data: "remote" (Remotive API) atau "fallback" (lokal).
   const [source, setSource] = useState<"remote" | "fallback">("remote");
@@ -61,6 +69,39 @@ export default function App() {
   const [keyword, setKeyword] = useState("");
   const [category, setCategory] = useState("");
   const debouncedKeyword = useDebounce(keyword, 400);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = isDarkMode ? "dark" : "light";
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    const handleShortcut = (event: KeyboardEvent) => {
+      const target = event.target;
+      const isTypingTarget =
+        target instanceof HTMLElement &&
+        (target.isContentEditable ||
+          target instanceof HTMLInputElement ||
+          target instanceof HTMLTextAreaElement ||
+          target instanceof HTMLSelectElement);
+
+      if (
+        event.key !== "/" ||
+        event.altKey ||
+        event.ctrlKey ||
+        event.metaKey ||
+        isTypingTarget
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      setView("explore");
+      window.requestAnimationFrame(() => searchInputRef.current?.focus());
+    };
+
+    window.addEventListener("keydown", handleShortcut);
+    return () => window.removeEventListener("keydown", handleShortcut);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -141,6 +182,15 @@ export default function App() {
   const simulateGhosting = useCallback(
     (id: string) => updateApplication(id, (a) => simulateDaysBack(a, 15)),
     [updateApplication],
+  );
+
+  const importBackup = useCallback(
+    (backup: ApplicationBackup) => {
+      setApplications(backup.applications);
+      setKaptenSkills(backup.kaptenSkills);
+      setSelectedId(null);
+    },
+    [setApplications, setKaptenSkills],
   );
 
   const deleteApplication = useCallback(
@@ -264,6 +314,14 @@ export default function App() {
       <header className="app-header">
         <h1>Aku Mw Magang</h1>
         <p>Kelola pencarian magang Kapten dari eksplorasi sampai offer.</p>
+        <button
+          className="theme-toggle"
+          type="button"
+          aria-pressed={isDarkMode}
+          onClick={() => setIsDarkMode((previous) => !previous)}
+        >
+          {isDarkMode ? "Mode Terang" : "Mode Gelap"}
+        </button>
         <nav className="app-nav">
           <button
             type="button"
@@ -362,6 +420,7 @@ export default function App() {
                 <JobSearchBar
                   keyword={keyword}
                   onKeywordChange={setKeyword}
+                  searchInputRef={searchInputRef}
                   categories={categories}
                   category={category}
                   onCategoryChange={setCategory}
@@ -416,6 +475,11 @@ export default function App() {
           <OfferComparator
             applications={applications}
             kaptenSkills={kaptenSkills}
+          />
+          <DataBackupControls
+            applications={applications}
+            kaptenSkills={kaptenSkills}
+            onImport={importBackup}
           />
         </main>
       )}
