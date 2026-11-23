@@ -1,0 +1,68 @@
+.data-backup {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #e3e6ec;
+  border-radius: 12px;
+}
+
+.data-backup h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.data-backup p {
+  margin: 0.25rem 0 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.data-backup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.data-backup-actions button,
+.data-backup-import {
+  padding: 0.5rem 0.8rem;
+  color: #1f2430;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: #fff;
+  border: 1px solid #e3e6ec;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.data-backup-actions button:hover,
+.data-backup-import:hover {
+  background: #f1f3f8;
+}
+
+.data-backup-import input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.data-backup-import:focus-within {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.data-backup .data-backup-message {
+  color: #166534;
+}
+
+.data-backup .data-backup-message.error {
+  color: #b91c1c;
+}

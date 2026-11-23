@@ -1,9 +1,11 @@
 import { useMemo } from "react";
+import type { RefObject } from "react";
 import { useDebounce } from "../hooks";
 
 interface JobSearchBarProps {
   keyword: string;
   onKeywordChange: (value: string) => void;
+  searchInputRef: RefObject<HTMLInputElement | null>;
   categories: string[];
   category: string;
   onCategoryChange: (value: string) => void;
@@ -13,6 +15,7 @@ interface JobSearchBarProps {
 export function JobSearchBar({
   keyword,
   onKeywordChange,
+  searchInputRef,
   categories,
   category,
   onCategoryChange,
@@ -33,6 +36,7 @@ export function JobSearchBar({
   return (
     <div className="job-search">
       <input
+        ref={searchInputRef}
         type="search"
         value={keyword}
         onChange={(e) => onKeywordChange(e.target.value)}
