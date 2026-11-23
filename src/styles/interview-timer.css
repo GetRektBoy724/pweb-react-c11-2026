@@ -1,0 +1,51 @@
+.interview-timer {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f7f8fb;
+  border: 1px solid #e3e6ec;
+  border-radius: 10px;
+}
+
+.interview-timer-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.interview-timer-heading h3,
+.interview-timer-heading p,
+.interview-timer-question {
+  margin: 0;
+}
+
+.interview-timer-heading p {
+  margin-top: 0.2rem;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.interview-timer-clock {
+  color: #1f2430;
+  font-size: 1.8rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 750;
+}
+
+.interview-timer-question {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.interview-timer-finished {
+  margin: 0;
+  color: #b45309;
+  font-size: 0.85rem;
+}
+
+.interview-timer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
