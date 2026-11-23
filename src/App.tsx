@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type {
   Application,
   JobListing,
@@ -20,10 +20,15 @@ import { OfferComparator } from "./components/OfferComparator";
 import { InterviewPrepTimer } from "./components/InterviewPrepTimer";
 import { calculateApplicationStatistics } from "./utils/dashboard";
 import "./styles/warroom.css";
+import "./styles/undo-toast.css";
 
 const DEFAULT_SKILLS = ["React", "TypeScript", "CSS"];
 
 type View = "explore" | "pipeline" | "add" | "dashboard";
+interface PendingDelete {
+  application: Application;
+  index: number;
+}
 
 export default function App() {
   // Persistensi utama wajib via useLocalStorage.
@@ -39,6 +44,10 @@ export default function App() {
   // [Member 2] Navigasi tab + lamaran yang sedang dibuka di panel detail.
   const [view, setView] = useState<View>("explore");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<PendingDelete | null>(null);
+  const [undoSecondsLeft, setUndoSecondsLeft] = useState(0);
+  const deleteTimeoutRef = useRef<number | null>(null);
+  const countdownIntervalRef = useRef<number | null>(null);
 
   // Sumber data: "remote" (Remotive API) atau "fallback" (lokal).
   const [source, setSource] = useState<"remote" | "fallback">("remote");
@@ -134,13 +143,77 @@ export default function App() {
     [updateApplication],
   );
 
-  // TODO Member 3: ganti dengan hapus + Toast Undo 5 detik (useRef + clearTimeout).
   const deleteApplication = useCallback(
     (id: string) => {
+      const index = applications.findIndex((application) => application.id === id);
+      const application = applications[index];
+      if (!application) return;
+
+      if (deleteTimeoutRef.current !== null) {
+        window.clearTimeout(deleteTimeoutRef.current);
+      }
+      if (countdownIntervalRef.current !== null) {
+        window.clearInterval(countdownIntervalRef.current);
+      }
+
+      setPendingDelete({ application, index });
+      setUndoSecondsLeft(5);
       setApplications((prev: Application[]) => prev.filter((a) => a.id !== id));
       setSelectedId((current) => (current === id ? null : current));
+
+      countdownIntervalRef.current = window.setInterval(() => {
+        setUndoSecondsLeft((seconds) => Math.max(seconds - 1, 0));
+      }, 1000);
+      deleteTimeoutRef.current = window.setTimeout(() => {
+        setPendingDelete(null);
+        setUndoSecondsLeft(0);
+        deleteTimeoutRef.current = null;
+        if (countdownIntervalRef.current !== null) {
+          window.clearInterval(countdownIntervalRef.current);
+          countdownIntervalRef.current = null;
+        }
+      }, 5000);
     },
-    [setApplications],
+    [applications, setApplications],
+  );
+
+  const undoDelete = useCallback(() => {
+    if (!pendingDelete) return;
+
+    if (deleteTimeoutRef.current !== null) {
+      window.clearTimeout(deleteTimeoutRef.current);
+      deleteTimeoutRef.current = null;
+    }
+    if (countdownIntervalRef.current !== null) {
+      window.clearInterval(countdownIntervalRef.current);
+      countdownIntervalRef.current = null;
+    }
+
+    setApplications((prev: Application[]) => {
+      if (prev.some((application) => application.id === pendingDelete.application.id)) {
+        return prev;
+      }
+      const index = Math.min(pendingDelete.index, prev.length);
+      return [
+        ...prev.slice(0, index),
+        pendingDelete.application,
+        ...prev.slice(index),
+      ];
+    });
+    setPendingDelete(null);
+    setUndoSecondsLeft(0);
+  }, [pendingDelete, setApplications]);
+
+  useEffect(
+    () => () => {
+      if (deleteTimeoutRef.current !== null) {
+        window.clearTimeout(deleteTimeoutRef.current);
+      }
+      if (countdownIntervalRef.current !== null) {
+        window.clearInterval(countdownIntervalRef.current);
+      }
+    },
+    [],
   );
 
   const selectedApplication = useMemo(
@@ -222,6 +295,17 @@ export default function App() {
           </button>
         </nav>
       </header>
+
+      {pendingDelete && (
+        <div className="undo-toast" role="status" aria-live="polite">
+          <span>
+            Lamaran {pendingDelete.application.company} dihapus. Undo tersedia {undoSecondsLeft} detik.
+          </span>
+          <button type="button" onClick={undoDelete}>
+            Undo
+          </button>
+        </div>
+      )}
 
       {view === "explore" && (
         <>
