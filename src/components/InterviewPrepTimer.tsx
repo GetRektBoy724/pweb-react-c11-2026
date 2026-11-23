@@ -24,18 +24,19 @@ export function InterviewPrepTimer() {
   const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
-    if (!isRunning) return;
+    if (!isRunning || secondsLeft === 0) return;
 
     const intervalId = window.setInterval(() => {
-      setSecondsLeft((seconds) => Math.max(seconds - 1, 0));
+      if (secondsLeft <= 1) {
+        setSecondsLeft(0);
+        setIsRunning(false);
+      } else {
+        setSecondsLeft(secondsLeft - 1);
+      }
     }, 1000);
 
     return () => window.clearInterval(intervalId);
-  }, [isRunning]);
-
-  useEffect(() => {
-    if (secondsLeft === 0) setIsRunning(false);
-  }, [secondsLeft]);
+  }, [isRunning, secondsLeft]);
 
   const resetTimer = () => {
     setIsRunning(false);
