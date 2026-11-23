@@ -15,11 +15,14 @@ import { JobList } from "./components/JobList";
 import { ApplicationForm } from "./components/ApplicationForm";
 import { WarRoom } from "./components/WarRoom";
 import { ApplicationDetail } from "./components/ApplicationDetail";
+import { DashboardStats } from "./components/DashboardStats";
+import { OfferComparator } from "./components/OfferComparator";
+import { calculateApplicationStatistics } from "./utils/dashboard";
 import "./styles/warroom.css";
 
 const DEFAULT_SKILLS = ["React", "TypeScript", "CSS"];
 
-type View = "explore" | "pipeline" | "add";
+type View = "explore" | "pipeline" | "add" | "dashboard";
 
 export default function App() {
   // Persistensi utama wajib via useLocalStorage.
@@ -180,6 +183,8 @@ export default function App() {
     return [...new Set(fetchState.jobs.map((j) => j.category))];
   }, [fetchState]);
 
+  const dashboardStatistics = calculateApplicationStatistics(applications);
+
   return (
     <div className="app">
       <header className="app-header">
@@ -207,7 +212,13 @@ export default function App() {
           >
             + Catat Lamaran
           </button>
-          {/* TODO Member 3: tab "Bandingkan Offer" + dashboard statistik */}
+          <button
+            type="button"
+            aria-current={view === "dashboard" ? "page" : undefined}
+            onClick={() => setView("dashboard")}
+          >
+            Dashboard
+          </button>
         </nav>
       </header>
 
@@ -309,6 +320,19 @@ export default function App() {
 
       {view === "add" && (
         <ApplicationForm applications={applications} onAdd={addApplication} />
+      )}
+
+      {view === "dashboard" && (
+        <main className="dashboard-page">
+          <section aria-labelledby="dashboard-title">
+            <h2 id="dashboard-title">Dashboard Lamaran</h2>
+            <DashboardStats statistics={dashboardStatistics} />
+          </section>
+          <OfferComparator
+            applications={applications}
+            kaptenSkills={kaptenSkills}
+          />
+        </main>
       )}
     </div>
   );
