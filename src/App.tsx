@@ -8,11 +8,18 @@ import { useLocalStorage, useDebounce } from "./hooks";
 import { fetchFallbackJobs, fetchRemoteJobs } from "./services/jobService";
 import { calcSkillMatch } from "./utils/skillMatch";
 import { isDuplicateApplication } from "./utils/duplicate";
+import { simulateDaysBack } from "./utils/ghosting";
 import { SkillProfile } from "./components/SkillProfile";
 import { JobSearchBar } from "./components/JobSearchBar";
 import { JobList } from "./components/JobList";
+import { ApplicationForm } from "./components/ApplicationForm";
+import { WarRoom } from "./components/WarRoom";
+import { ApplicationDetail } from "./components/ApplicationDetail";
+import "./styles/warroom.css";
 
 const DEFAULT_SKILLS = ["React", "TypeScript", "CSS"];
+
+type View = "explore" | "pipeline" | "add";
 
 export default function App() {
   // Persistensi utama wajib via useLocalStorage.
@@ -25,11 +32,17 @@ export default function App() {
     DEFAULT_SKILLS,
   );
 
+  // [Member 2] Navigasi tab + lamaran yang sedang dibuka di panel detail.
+  const [view, setView] = useState<View>("explore");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
   // Sumber data: "remote" (Remotive API) atau "fallback" (lokal).
   const [source, setSource] = useState<"remote" | "fallback">("remote");
   const [fetchState, setFetchState] = useState<JobsFetchState>({
     kind: "loading",
   });
+  // [Fix] Nonce agar tombol Coba Lagi benar-benar memicu ulang effect.
+  const [reloadKey, setReloadKey] = useState(0);
 
   // Search + filter (keyword didebounce 400ms sebelum dipakai).
   const [keyword, setKeyword] = useState("");
@@ -44,6 +57,7 @@ export default function App() {
       source === "remote" ? fetchRemoteJobs : fetchFallbackJobs;
     fetcher(controller.signal)
       .then((result: JobListing[]) => {
+        if (controller.signal.aborted) return;
         setFetchState({ kind: "success", jobs: result });
       })
       .catch((err: unknown) => {
@@ -54,16 +68,13 @@ export default function App() {
         });
       });
 
-    // Cleanup: batalkan fetch saat unmount / ganti sumber.
+    // Cleanup: batalkan fetch saat unmount / ganti sumber / retry.
     return () => controller.abort();
-  }, [source]);
+  }, [source, reloadKey]);
 
-  // Tombol Coba Lagi: paksa ulang fetch ke sumber aktif.
+  // Tombol Coba Lagi: ulang fetch ke sumber aktif.
   const retry = useCallback(() => {
-    setSource((s) => s);
-    setFetchState({ kind: "loading" });
-    // Re-trigger effect dengan toggle identitas sumber.
-    setSource((s) => (s === "remote" ? "remote" : "fallback"));
+    setReloadKey((k) => k + 1);
   }, []);
 
   // Simpan lowongan ke daftar lamaran sebagai WISHLIST.
@@ -94,6 +105,43 @@ export default function App() {
       setApplications((prev: Application[]) => [...prev, newApplication]);
     },
     [applications, setApplications],
+  );
+
+  // [Member 2] Handler lamaran: semua update immutable.
+  const addApplication = useCallback(
+    (application: Application) => {
+      setApplications((prev: Application[]) => [...prev, application]);
+      setView("pipeline");
+    },
+    [setApplications],
+  );
+
+  const updateApplication = useCallback(
+    (id: string, updater: (prev: Application) => Application) => {
+      setApplications((prev: Application[]) =>
+        prev.map((a) => (a.id === id ? updater(a) : a)),
+      );
+    },
+    [setApplications],
+  );
+
+  const simulateGhosting = useCallback(
+    (id: string) => updateApplication(id, (a) => simulateDaysBack(a, 15)),
+    [updateApplication],
+  );
+
+  // TODO Member 3: ganti dengan hapus + Toast Undo 5 detik (useRef + clearTimeout).
+  const deleteApplication = useCallback(
+    (id: string) => {
+      setApplications((prev: Application[]) => prev.filter((a) => a.id !== id));
+      setSelectedId((current) => (current === id ? null : current));
+    },
+    [setApplications],
+  );
+
+  const selectedApplication = useMemo(
+    () => applications.find((a) => a.id === selectedId) ?? null,
+    [applications, selectedId],
   );
 
   // Derived state: hasil filter + sort by Match Score.
@@ -137,76 +185,131 @@ export default function App() {
       <header className="app-header">
         <h1>Aku Mw Magang</h1>
         <p>Kelola pencarian magang Kapten dari eksplorasi sampai offer.</p>
+        <nav className="app-nav">
+          <button
+            type="button"
+            aria-current={view === "explore" ? "page" : undefined}
+            onClick={() => setView("explore")}
+          >
+            Eksplorasi Lowongan
+          </button>
+          <button
+            type="button"
+            aria-current={view === "pipeline" ? "page" : undefined}
+            onClick={() => setView("pipeline")}
+          >
+            Pipeline Lamaran ({applications.length})
+          </button>
+          <button
+            type="button"
+            aria-current={view === "add" ? "page" : undefined}
+            onClick={() => setView("add")}
+          >
+            + Catat Lamaran
+          </button>
+          {/* TODO Member 3: tab "Bandingkan Offer" + dashboard statistik */}
+        </nav>
       </header>
 
-      <SkillProfile
-        skills={kaptenSkills}
-        onAdd={(skill) => setKaptenSkills((prev) => [...prev, skill])}
-        onRemove={(skill) =>
-          setKaptenSkills((prev) => prev.filter((s) => s !== skill))
-        }
-      />
+      {view === "explore" && (
+        <>
+          <SkillProfile
+            skills={kaptenSkills}
+            onAdd={(skill) => setKaptenSkills((prev) => [...prev, skill])}
+            onRemove={(skill) =>
+              setKaptenSkills((prev) => prev.filter((s) => s !== skill))
+            }
+          />
 
-      <section className="exploration">
-        <h2>Eksplorasi Lowongan</h2>
-        <div className="source-toggle">
-          <label>
-            <input
-              type="radio"
-              name="source"
-              checked={source === "remote"}
-              onChange={() => setSource("remote")}
-            />
-            Remotive API
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="source"
-              checked={source === "fallback"}
-              onChange={() => setSource("fallback")}
-            />
-            Fallback Lokal
-          </label>
-        </div>
-
-        {fetchState.kind === "loading" && <p className="loading">Memuat lowongan…</p>}
-        {fetchState.kind === "error" && (
-          <div className="error-state">
-            <p>Gagal memuat: {fetchState.message}</p>
-            <div className="error-actions">
-              <button type="button" onClick={retry}>
-                Coba Lagi
-              </button>
-              <button
-                type="button"
-                onClick={() => setSource(source === "remote" ? "fallback" : "remote")}
-              >
-                Ganti ke {source === "remote" ? "Fallback Lokal" : "Remotive API"}
-              </button>
+          <section className="exploration">
+            <h2>Eksplorasi Lowongan</h2>
+            <div className="source-toggle">
+              <label>
+                <input
+                  type="radio"
+                  name="source"
+                  checked={source === "remote"}
+                  onChange={() => setSource("remote")}
+                />
+                Remotive API
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="source"
+                  checked={source === "fallback"}
+                  onChange={() => setSource("fallback")}
+                />
+                Fallback Lokal
+              </label>
             </div>
-          </div>
-        )}
-        {fetchState.kind === "success" && (
-          <>
-            <JobSearchBar
-              keyword={keyword}
-              onKeywordChange={setKeyword}
-              categories={categories}
-              category={category}
-              onCategoryChange={setCategory}
-            />
-            <p className="count">{visibleJobs.length} lowongan</p>
-            <JobList
-              jobs={visibleJobs}
-              kaptenSkills={kaptenSkills}
-              appliedKeys={appliedKeys}
-              calcMatch={(required) => calcSkillMatch(kaptenSkills, required)}
-              onSave={saveToWishlist}
-            />
-          </>
-        )}
-      </section>
+
+            {fetchState.kind === "loading" && <p className="loading">Memuat lowongan…</p>}
+            {fetchState.kind === "error" && (
+              <div className="error-state">
+                <p>Gagal memuat: {fetchState.message}</p>
+                <div className="error-actions">
+                  <button type="button" onClick={retry}>
+                    Coba Lagi
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSource(source === "remote" ? "fallback" : "remote")}
+                  >
+                    Ganti ke {source === "remote" ? "Fallback Lokal" : "Remotive API"}
+                  </button>
+                </div>
+              </div>
+            )}
+            {fetchState.kind === "success" && (
+              <>
+                <JobSearchBar
+                  keyword={keyword}
+                  onKeywordChange={setKeyword}
+                  categories={categories}
+                  category={category}
+                  onCategoryChange={setCategory}
+                />
+                <p className="count">{visibleJobs.length} lowongan</p>
+                <JobList
+                  jobs={visibleJobs}
+                  kaptenSkills={kaptenSkills}
+                  appliedKeys={appliedKeys}
+                  calcMatch={(required) => calcSkillMatch(kaptenSkills, required)}
+                  onSave={saveToWishlist}
+                />
+              </>
+            )}
+          </section>
+        </>
+      )}
+
+      {view === "pipeline" && (
+        <>
+          <WarRoom
+            applications={applications}
+            kaptenSkills={kaptenSkills}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+            onSimulate={simulateGhosting}
+          />
+          {selectedApplication && (
+            <ApplicationDetail
+              key={selectedApplication.id}
+              application={selectedApplication}
+              onUpdate={updateApplication}
+              onDelete={deleteApplication}
+              onClose={() => setSelectedId(null)}
+            >
+              {/* TODO Member 3: <InterviewPrepTimer /> dipasang di sini */}
+            </ApplicationDetail>
+          )}
+        </>
+      )}
+
+      {view === "add" && (
+        <ApplicationForm applications={applications} onAdd={addApplication} />
+      )}
     </div>
   );
 }
