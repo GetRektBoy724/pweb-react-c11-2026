@@ -105,7 +105,6 @@ export default function App() {
 
   useEffect(() => {
     const controller = new AbortController();
-    setFetchState({ kind: "loading" });
 
     const fetcher =
       source === "remote" ? fetchRemoteJobs : fetchFallbackJobs;
@@ -128,8 +127,14 @@ export default function App() {
 
   // Tombol Coba Lagi: ulang fetch ke sumber aktif.
   const retry = useCallback(() => {
+    setFetchState({ kind: "loading" });
     setReloadKey((k) => k + 1);
-  }, []);
+  }, [setFetchState]);
+
+  const changeSource = (nextSource: "remote" | "fallback") => {
+    setFetchState({ kind: "loading" });
+    setSource(nextSource);
+  };
 
   // Simpan lowongan ke daftar lamaran sebagai WISHLIST.
   const saveToWishlist = useCallback(
@@ -383,7 +388,7 @@ export default function App() {
                   type="radio"
                   name="source"
                   checked={source === "remote"}
-                  onChange={() => setSource("remote")}
+                  onChange={() => changeSource("remote")}
                 />
                 Remotive API
               </label>
@@ -392,7 +397,7 @@ export default function App() {
                   type="radio"
                   name="source"
                   checked={source === "fallback"}
-                  onChange={() => setSource("fallback")}
+                  onChange={() => changeSource("fallback")}
                 />
                 Fallback Lokal
               </label>
@@ -408,7 +413,7 @@ export default function App() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setSource(source === "remote" ? "fallback" : "remote")}
+                    onClick={() => changeSource(source === "remote" ? "fallback" : "remote")}
                   >
                     Ganti ke {source === "remote" ? "Fallback Lokal" : "Remotive API"}
                   </button>
