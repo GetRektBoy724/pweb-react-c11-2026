@@ -417,15 +417,15 @@ input::placeholder, textarea::placeholder { color: var(--text-3); }
 
 .match-ring {
   flex-shrink: 0;
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
 }
 .match-ring circle { fill: none; stroke-width: 3; }
 .match-ring .track { stroke: var(--border); }
 .match-ring text {
-  font-size: 8.5px;
+  font-size: 9px;
   font-weight: 590;
-  fill: var(--text);
+  fill: var(--text-2);
   font-variant-numeric: tabular-nums;
 }
 
@@ -437,10 +437,10 @@ input::placeholder, textarea::placeholder { color: var(--text-3); }
 
 .salary {
   margin: 0;
-  font-weight: 510;
-  font-size: 0.8125rem;
+  font-weight: 590;
+  font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
-  color: var(--text-2);
+  color: var(--text);
 }
 
 .skills {
@@ -453,15 +453,15 @@ input::placeholder, textarea::placeholder { color: var(--text-3); }
   margin: 0;
   font-size: 0.75rem;
   line-height: 1.4;
+  color: var(--text-3);
 }
-.skills .matched { color: var(--text-3); }
-.skills .matched b, .match-chip-strong { color: var(--hi); font-weight: 510; }
-.skills .missing { color: var(--text-3); }
+.skills .matched b { color: var(--hi); font-weight: 510; }
 .skills .missing b { color: var(--lo); font-weight: 510; }
 
 .job-card .job-save {
   margin-top: auto;
   align-self: flex-start;
+  font-weight: 510;
 }
 .job-card button:disabled {
   border-color: transparent;

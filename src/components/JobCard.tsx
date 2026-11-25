@@ -12,7 +12,8 @@ interface JobCardProps {
 function MatchRing({ score, variant }: { score: number; variant: string }) {
   const R = 14;
   const C = 2 * Math.PI * R;
-  const dash = (score / 100) * C;
+  // Minimal dash agar 0% tetap terlihat sebagai track penuh, bukan titik.
+  const dash = score === 0 ? 0 : Math.max((score / 100) * C, 4);
   const strokeClass =
     variant === "high" ? "--hi" : variant === "mid" ? "--md" : "--lo";
   return (
@@ -23,15 +24,17 @@ function MatchRing({ score, variant }: { score: number; variant: string }) {
       aria-label={`Match score ${score}%`}
     >
       <circle className="track" cx="17" cy="17" r={R} />
-      <circle
-        cx="17"
-        cy="17"
-        r={R}
-        stroke={`var(${strokeClass})`}
-        strokeDasharray={`${dash} ${C - dash}`}
-        strokeLinecap="round"
-        transform="rotate(-90 17 17)"
-      />
+      {score > 0 && (
+        <circle
+          cx="17"
+          cy="17"
+          r={R}
+          stroke={`var(${strokeClass})`}
+          strokeDasharray={`${dash} ${C - dash}`}
+          strokeLinecap="round"
+          transform="rotate(-90 17 17)"
+        />
+      )}
       <text x="17" y="17" textAnchor="middle" dominantBaseline="central">
         {score}%
       </text>
