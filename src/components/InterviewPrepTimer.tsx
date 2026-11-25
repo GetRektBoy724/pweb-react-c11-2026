@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "../styles/interview-timer.css";
 
 const TIMER_DURATION_SECONDS = 2 * 60;
 

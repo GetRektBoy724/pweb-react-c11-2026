@@ -22,7 +22,7 @@ import { DataBackupControls } from "./components/DataBackupControls";
 import { calculateApplicationStatistics } from "./utils/dashboard";
 import type { ApplicationBackup } from "./utils/backup";
 import "./styles/warroom.css";
-import "./styles/undo-toast.css";
+import "./styles/panels.css";
 import "./styles/theme.css";
 
 const DEFAULT_SKILLS = ["React", "TypeScript", "CSS"];
