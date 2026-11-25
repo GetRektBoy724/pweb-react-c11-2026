@@ -38,7 +38,10 @@ export function calculateApplicationStatistics(
       application.status === "REJECTED",
   ).length;
   const interviewCount = applications.filter(
-    (application) => application.status === "INTERVIEW",
+    (application) =>
+      application.status === "INTERVIEW" ||
+      application.status === "OFFER" ||
+      application.interviewDateTime !== undefined,
   ).length;
   const ghostingRiskCount = applications.filter((application) =>
     isGhostingRisk(application, now),
