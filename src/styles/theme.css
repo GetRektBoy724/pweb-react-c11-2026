@@ -1,132 +1,31 @@
-html[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #111827;
-  --card: #1f2937;
-  --text: #e5e7eb;
-  --muted: #9ca3af;
-  --border: #374151;
-  --m2-text: #e5e7eb;
-  --m2-muted: #9ca3af;
-  --m2-border: #374151;
-  --m2-surface: #1f2937;
-  --m2-primary-soft: #1e3a8a;
-}
+/* Theme dikendalikan penuh oleh token di index.css:
+   html[data-theme="dark"] menukar blok token — tidak ada override per-komponen. */
 
 html[data-theme="dark"] body {
   background: var(--bg);
   color: var(--text);
 }
 
-html[data-theme="dark"] .skill-profile,
-html[data-theme="dark"] .exploration,
-html[data-theme="dark"] .job-card,
-html[data-theme="dark"] .dashboard-stat-card,
-html[data-theme="dark"] .offer-comparator,
-html[data-theme="dark"] .offer-comparison-card,
-html[data-theme="dark"] .data-backup {
-  color: var(--text);
-  background: var(--card);
-  border-color: var(--border);
+/* Toast gelap di kedua tema */
+.undo-toast {
+  color: #f7f8f8;
+  background: #1b1c20;
+  border: 1px solid rgba(255, 255, 255, 0.09);
 }
 
-html[data-theme="dark"] .ap-form,
-html[data-theme="dark"] .war-room,
-html[data-theme="dark"] .ap-detail {
-  color: var(--m2-text);
-  background: var(--m2-surface);
-  border-color: var(--m2-border);
-}
-
-html[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]),
-html[data-theme="dark"] select,
-html[data-theme="dark"] textarea {
-  color: var(--text);
-  background: #111827 !important;
-  border-color: var(--border) !important;
-}
-
-html[data-theme="dark"] .job-search select,
-html[data-theme="dark"] .ap-form input,
-html[data-theme="dark"] .ap-form select,
-html[data-theme="dark"] .wr-filters input[type="search"],
-html[data-theme="dark"] .wr-filters select,
-html[data-theme="dark"] .transition-fields input,
-html[data-theme="dark"] .transition-fields select,
-html[data-theme="dark"] .inline-form input,
-html[data-theme="dark"] .offer-comparator-selectors select {
-  color: var(--text);
-  background: #111827;
-  border-color: var(--border);
-}
-
-html[data-theme="dark"] button,
-html[data-theme="dark"] .data-backup-import {
-  color: var(--text);
-  background: #273449;
-  border-color: var(--border);
-}
-
-html[data-theme="dark"] .app-nav button[aria-current="page"],
-html[data-theme="dark"] .job-card button:not(:disabled),
-html[data-theme="dark"] .skill-form button,
-html[data-theme="dark"] .ap-form button[type="submit"],
-html[data-theme="dark"] .inline-form button,
-html[data-theme="dark"] .transition-box > button,
-html[data-theme="dark"] .wr-actions button:first-child,
-html[data-theme="dark"] .data-backup-actions button {
-  color: #fff;
-  background: #2563eb;
-  border-color: #2563eb;
-}
-
-html[data-theme="dark"] .job-card button:disabled {
-  color: var(--muted);
-  background: #273449;
-  border-color: var(--border);
-}
-
-html[data-theme="dark"] .transition-box,
-html[data-theme="dark"] .interview-timer,
-html[data-theme="dark"] .offer-comparator-empty,
-html[data-theme="dark"] .offer-comparator-tie {
-  color: var(--text);
-  background: #111827;
-  border-color: var(--border);
-}
-
-html[data-theme="dark"] .dashboard-stat-card h3,
-html[data-theme="dark"] .offer-comparator-header p,
-html[data-theme="dark"] .offer-comparison-card-title p,
-html[data-theme="dark"] .data-backup p,
-html[data-theme="dark"] .offer-score-breakdown dt {
-  color: var(--muted);
-}
-
-html[data-theme="dark"] .dashboard-stat-card p,
-html[data-theme="dark"] .interview-timer-clock {
-  color: var(--text);
-}
-
-html[data-theme="dark"] .theme-toggle {
-  margin-top: 0.25rem;
-  padding: 0.45rem 0.75rem;
-  font: inherit;
-  font-size: 0.85rem;
-  font-weight: 600;
+.theme-toggle {
+  margin: 6px 0 0;
+  padding: 6px 11px;
+  color: var(--text-2);
+  font-size: 0.8125rem;
+  font-weight: 510;
+  background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 7px;
   cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease;
 }
-
-html[data-theme="light"] .theme-toggle {
-  margin-top: 0.25rem;
-  padding: 0.45rem 0.75rem;
-  color: #1f2430;
-  font: inherit;
-  font-size: 0.85rem;
-  font-weight: 600;
-  background: #fff;
-  border: 1px solid #e3e6ec;
-  border-radius: 8px;
-  cursor: pointer;
+.theme-toggle:hover {
+  background: var(--inset);
+  color: var(--text);
 }

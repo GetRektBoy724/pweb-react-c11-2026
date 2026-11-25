@@ -2,7 +2,6 @@ import { useState } from "react";
 import type { ChangeEvent } from "react";
 import type { Application } from "../types";
 import { isApplicationBackup, type ApplicationBackup } from "../utils/backup";
-import "../styles/data-backup.css";
 
 interface DataBackupControlsProps {
   applications: Application[];

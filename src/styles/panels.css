@@ -1,0 +1,250 @@
+/* Dashboard, Offer Comparator, Interview Timer, Data Backup, Toast — token system */
+
+/* ---------- Dashboard stats ---------- */
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 12px;
+  margin: 1rem 0;
+}
+
+.dashboard-stat-card {
+  min-width: 0;
+  padding: 16px;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+.dashboard-stat-card:hover { border-color: rgba(94, 106, 210, 0.4); transform: translateY(-1px); }
+
+.dashboard-stat-card h3 {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 0.6875rem;
+  font-weight: 590;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.dashboard-stat-card p {
+  margin: 8px 0 0;
+  color: var(--text);
+  font-size: 1.75rem;
+  font-weight: 590;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Offer Comparator ---------- */
+.offer-comparator {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  padding: 20px;
+  color: var(--text);
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.offer-comparator-header h2,
+.offer-comparison-card h3 { margin: 0; font-size: 1.125rem; font-weight: 590; }
+
+.offer-comparator-header p,
+.offer-comparison-card-title p {
+  margin: 0.25rem 0 0;
+  color: var(--text-3);
+  font-size: 0.8125rem;
+}
+
+.offer-comparator-selectors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.75rem;
+}
+
+.offer-comparator-selectors label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 510;
+  color: var(--text-2);
+}
+
+.offer-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.75rem;
+}
+
+.offer-comparison-card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--inset);
+  transition: border-color 160ms ease;
+}
+.offer-comparison-card.best { border-color: var(--hi); box-shadow: 0 0 0 3px var(--hi-bg); }
+
+.offer-comparison-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.offer-comparison-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--text-3);
+  font-size: 0.6875rem;
+  font-weight: 590;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.offer-recommendation {
+  flex: none;
+  padding: 2px 8px;
+  color: var(--hi);
+  font-size: 0.6875rem;
+  font-weight: 590;
+  background: var(--hi-bg);
+  border-radius: 999px;
+}
+
+.offer-score-breakdown { display: grid; gap: 0.45rem; margin: 1rem 0 0; }
+.offer-score-breakdown > div { display: flex; justify-content: space-between; gap: 0.75rem; font-size: 0.8125rem; color: var(--text-2); }
+.offer-score-breakdown dt { color: var(--text-3); }
+.offer-score-breakdown dd { margin: 0; font-weight: 510; text-align: right; font-variant-numeric: tabular-nums; }
+.offer-score-breakdown .offer-total-score {
+  margin-top: 0.2rem;
+  padding-top: 0.65rem;
+  font-size: 1rem;
+  font-weight: 590;
+  color: var(--text);
+  border-top: 1px solid var(--border);
+}
+
+.offer-comparator-empty,
+.offer-comparator-tie {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  color: var(--text-2);
+  background: var(--inset);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+/* ---------- Interview Timer ---------- */
+.interview-timer {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--inset);
+  border: 1px solid var(--border-2);
+  border-radius: 10px;
+}
+
+.interview-timer-heading { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.interview-timer-heading h3,
+.interview-timer-heading p,
+.interview-timer-question { margin: 0; }
+.interview-timer-heading h3 { font-size: 1rem; font-weight: 590; }
+.interview-timer-heading p { margin-top: 0.2rem; color: var(--text-3); font-size: 0.8125rem; }
+
+.interview-timer-clock {
+  color: var(--text);
+  font-size: 2rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 590;
+  letter-spacing: 0.02em;
+  margin: 0.25rem 0;
+}
+.interview-timer-clock.running { color: var(--accent-txt); }
+.interview-timer-clock.finished-clock { color: var(--md); }
+
+.interview-timer-question { font-size: 0.9375rem; line-height: 1.5; color: var(--text-2); }
+.interview-timer-finished { margin: 0; color: var(--md); font-size: 0.8125rem; font-weight: 510; }
+.interview-timer-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+/* ---------- Data Backup ---------- */
+.data-backup {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding: 20px;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.data-backup h2 { margin: 0; font-size: 1.125rem; font-weight: 590; }
+.data-backup p { margin: 0.25rem 0 0; color: var(--text-3); font-size: 0.8125rem; }
+.data-backup-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.data-backup-import input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+.data-backup-import:focus-within { outline: none; }
+.data-backup-import:focus-within button { box-shadow: var(--ring); }
+
+.data-backup .data-backup-message { color: var(--hi); font-size: 0.8125rem; }
+.data-backup .data-backup-message.error { color: var(--lo); }
+
+/* ---------- Undo Toast ---------- */
+.undo-toast {
+  position: sticky;
+  top: 0.75rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: min(100%, 42rem);
+  margin: 0 auto 1rem;
+  padding: 0.75rem 1rem;
+  color: #f7f8f8;
+  background: #1b1c20;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  animation: toast-in 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.undo-toast button {
+  flex: none;
+  padding: 5px 12px;
+  color: #fff;
+  font-weight: 590;
+  font-size: 0.8125rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background-color 140ms ease;
+}
+.undo-toast button:hover { background: rgba(255, 255, 255, 0.12); }
+
+@media (prefers-reduced-motion: reduce) {
+  .undo-toast { animation: none; }
+  .progress-bar > div { transition: none; }
+  .wr-card:hover, .job-card:hover, .dashboard-stat-card:hover { transform: none; }
+}

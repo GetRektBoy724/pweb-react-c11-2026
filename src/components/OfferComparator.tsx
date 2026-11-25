@@ -1,7 +1,6 @@
 import { useState } from "react";
 import type { Application } from "../types";
 import { compareOffers } from "../utils/offerComparison";
-import "../styles/offer-comparator.css";
 
 interface OfferComparatorProps {
   applications: Application[];
@@ -97,7 +96,10 @@ export function OfferComparator({
                   const recommended = score.applicationId === comparison.recommendedOfferId;
 
                   return (
-                    <article className="offer-comparison-card" key={score.applicationId}>
+                    <article
+                      className={`offer-comparison-card${recommended ? " best" : ""}`}
+                      key={score.applicationId}
+                    >
                       <div className="offer-comparison-card-title">
                         <div>
                           <span className="offer-comparison-label">Offer {index === 0 ? "A" : "B"}</span>

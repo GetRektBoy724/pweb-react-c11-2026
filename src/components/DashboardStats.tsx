@@ -1,5 +1,4 @@
 import type { ApplicationStatistics } from "../utils/dashboard";
-import "../styles/dashboard.css";
 
 interface DashboardStatsProps {
   statistics: ApplicationStatistics;
