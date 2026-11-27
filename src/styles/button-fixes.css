@@ -1,0 +1,108 @@
+/* Keep button hover colors consistent with the active theme. */
+html[data-theme="light"] .ap-detail .interview-timer-actions button:first-child:hover:not(:disabled) {
+  color: #fff;
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+}
+
+html[data-theme="light"] .ap-detail .interview-timer-actions button:not(:first-child):hover:not(:disabled) {
+  color: var(--text);
+  background: var(--panel2);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] button:hover:not(:disabled) {
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 13%, var(--panel2));
+  border-color: var(--accent);
+}
+
+html[data-theme="dark"] .app-nav button:hover:not([aria-current="page"]) {
+  color: var(--text);
+  background: var(--panel2);
+  border-color: transparent;
+}
+
+html[data-theme="dark"] .app-nav button[aria-current="page"],
+html[data-theme="dark"] .app-nav button[aria-current="page"]:hover {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+html[data-theme="dark"] .ap-detail button,
+html[data-theme="dark"] .war-room .wr-actions button,
+html[data-theme="dark"] .interview-timer-actions button,
+html[data-theme="dark"] .ap-form button {
+  color: var(--text);
+  background: var(--panel2);
+  border-color: var(--line);
+}
+
+html[data-theme="dark"] .ap-detail .transition-options button.active,
+html[data-theme="dark"] .ap-detail .transition-options button.active:hover {
+  color: var(--accent-dark);
+  background: color-mix(in srgb, var(--accent) 22%, var(--panel));
+  border-color: var(--accent);
+}
+
+html[data-theme="dark"] .ap-detail .stepper li {
+  border-color: var(--line);
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .ap-detail .stepper li.current {
+  border-color: var(--accent);
+  color: var(--accent-dark);
+}
+
+html[data-theme="dark"] .ap-detail .ap-detail-actions button:first-child {
+  color: var(--bad);
+  background: color-mix(in srgb, var(--bad) 10%, var(--panel));
+  border-color: color-mix(in srgb, var(--bad) 35%, var(--line));
+}
+
+html[data-theme="dark"] .ap-detail .ap-detail-actions button:first-child:hover {
+  color: var(--bad);
+  background: color-mix(in srgb, var(--bad) 20%, var(--panel));
+  border-color: var(--bad);
+}
+
+html[data-theme="dark"] .ap-detail .checklist li button {
+  color: var(--muted);
+  background: transparent;
+  border-color: transparent;
+}
+
+html[data-theme="dark"] .ap-detail .checklist li button:hover {
+  color: var(--bad);
+  background: color-mix(in srgb, var(--bad) 12%, var(--panel));
+  border-color: transparent;
+}
+
+html[data-theme="dark"] .interview-timer-actions button:first-child,
+html[data-theme="dark"] .interview-timer-actions button:first-child:hover:not(:disabled),
+html[data-theme="dark"] .ap-form button[type="submit"],
+html[data-theme="dark"] .ap-form button[type="submit"]:hover,
+html[data-theme="dark"] .ap-detail .inline-form button,
+html[data-theme="dark"] .ap-detail .inline-form button:hover,
+html[data-theme="dark"] .ap-detail .transition-box > button,
+html[data-theme="dark"] .ap-detail .transition-box > button:hover,
+html[data-theme="dark"] .war-room .wr-actions button:first-child,
+html[data-theme="dark"] .war-room .wr-actions button:first-child:hover,
+html[data-theme="dark"] .job-card > button:hover:not(:disabled),
+html[data-theme="dark"] .skill-form button:hover,
+html[data-theme="dark"] .data-backup-actions button:first-child:hover {
+  color: #fff;
+  background: color-mix(in srgb, var(--accent) 72%, #000);
+  border-color: color-mix(in srgb, var(--accent) 72%, #000);
+}
+
+html[data-theme="dark"] .interview-timer-actions button:not(:first-child):hover:not(:disabled),
+html[data-theme="dark"] .ap-detail button:not(.transition-options button.active):hover:not(:disabled),
+html[data-theme="dark"] .war-room .wr-actions button:not(:first-child):hover:not(:disabled),
+html[data-theme="dark"] .ap-form button:not([type="submit"]):hover:not(:disabled) {
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 13%, var(--panel2));
+  border-color: var(--accent);
+}

@@ -25,6 +25,7 @@ import "./styles/warroom.css";
 import "./styles/undo-toast.css";
 import "./styles/theme.css";
 import "./styles/starry-home.css";
+import "./styles/button-fixes.css";
 
 const DEFAULT_SKILLS = ["React", "TypeScript", "CSS"];
 
