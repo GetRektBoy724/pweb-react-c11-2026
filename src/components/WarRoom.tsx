@@ -43,7 +43,14 @@ export function WarRoom({
 
   return (
     <section className="war-room">
-      <h2>Pipeline Lamaran ({applications.length})</h2>
+      <header className="wr-page-head">
+        <div>
+          <span className="eyebrow">WORKSPACE / PIPELINE</span>
+          <h1>Pipeline Lamaran</h1>
+          <p>Pantau progres seleksi dan langkah berikutnya untuk setiap lamaran.</p>
+        </div>
+        <span className="wr-total-count">{applications.length} lamaran</span>
+      </header>
 
       {conflicts.length > 0 && (
         <div className="conflict-banner" role="alert">
@@ -64,10 +71,12 @@ export function WarRoom({
         <input
           type="search"
           placeholder="Cari perusahaan atau posisi…"
+          aria-label="Cari perusahaan atau posisi"
           value={filters.query}
           onChange={(e) => setFilters({ ...filters, query: e.target.value })}
         />
         <select
+          aria-label="Filter berdasarkan status"
           value={filters.status}
           onChange={(e) =>
             setFilters({ ...filters, status: e.target.value as ApplicationStatus | "ALL" })
@@ -81,6 +90,7 @@ export function WarRoom({
           ))}
         </select>
         <select
+          aria-label="Urutkan lamaran"
           value={filters.sort}
           onChange={(e) => setFilters({ ...filters, sort: e.target.value as SortMode })}
         >
@@ -91,6 +101,7 @@ export function WarRoom({
         <label className="wr-toggle">
           <input
             type="checkbox"
+            aria-label="Hanya tampilkan lamaran rawan ghosting"
             checked={filters.onlyGhosting}
             onChange={(e) => setFilters({ ...filters, onlyGhosting: e.target.checked })}
           />
@@ -130,8 +141,11 @@ export function WarRoom({
 
               <div className="wr-meta">
                 <span>CV: {app.cvVersion ?? "-"}</span>
-                <span>
-                  Checklist: {progress.done}/{progress.total}
+                <span className="wr-checklist-progress">
+                  <span>Checklist: {progress.done}/{progress.total}</span>
+                  <span className="progress-bar" role="progressbar" aria-label={`Checklist ${app.company}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={progress.percent}>
+                    <span style={{ width: `${progress.percent}%` }} />
+                  </span>
                 </span>
                 <span className={`match-badge ${matchScoreVariant(match.score)}`}>
                   Match {match.score}%

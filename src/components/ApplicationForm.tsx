@@ -128,22 +128,24 @@ export function ApplicationForm({ applications, onAdd }: ApplicationFormProps) {
         {errors.role && <span className="field-error">{errors.role}</span>}
       </label>
 
-      <label>
-        Mode kerja
-        <select value={workMode} onChange={(e) => setWorkMode(e.target.value as WorkMode)}>
-          <option value="Remote">Remote</option>
-          <option value="Hybrid">Hybrid</option>
-          <option value="Onsite">Onsite</option>
-        </select>
-      </label>
+      <div className="ap-form-pair">
+        <label>
+          Mode kerja
+          <select value={workMode} onChange={(e) => setWorkMode(e.target.value as WorkMode)}>
+            <option value="Remote">Remote</option>
+            <option value="Hybrid">Hybrid</option>
+            <option value="Onsite">Onsite</option>
+          </select>
+        </label>
 
-      <label>
-        Status awal
-        <select value={status} onChange={(e) => setStatus(e.target.value as InitialStatus)}>
-          <option value="WISHLIST">Wishlist</option>
-          <option value="APPLIED">Applied</option>
-        </select>
-      </label>
+        <label>
+          Status awal
+          <select value={status} onChange={(e) => setStatus(e.target.value as InitialStatus)}>
+            <option value="WISHLIST">Wishlist</option>
+            <option value="APPLIED">Applied</option>
+          </select>
+        </label>
+      </div>
 
       {status === "APPLIED" && (
         <>

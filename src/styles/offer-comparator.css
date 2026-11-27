@@ -123,3 +123,17 @@
   background: #f7f8fb;
   border-radius: 8px;
 }
+
+.dashboard-page { display:grid;gap:0; }.offer-comparator,.data-backup { margin-top:0;padding:20px;border-radius:16px;background:var(--panel);border-color:var(--line);box-shadow:var(--shadow);color:var(--text); }
+.offer-comparator-header h2,.data-backup h2 { color:var(--text);font-size:18px; }.offer-comparator-header p,.offer-comparison-card-title p,.data-backup p { color:var(--muted); }
+.offer-comparator-selectors select { min-height:42px;padding:9px 12px;border-color:var(--line);border-radius:10px;background:var(--panel2);color:var(--text); }
+.offer-comparison-grid { grid-template-columns:repeat(2,minmax(0,1fr));gap:14px; }
+.offer-comparison-card { padding:16px;border-color:var(--line);border-radius:14px;background:var(--panel2); }
+.offer-comparison-label { color:var(--muted); }.offer-recommendation { padding:4px 9px;background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok); }
+.offer-score-breakdown dt { color:var(--muted); }.offer-score-breakdown .offer-total-score { border-color:var(--line); }
+.offer-comparator-empty,.offer-comparator-tie { padding:18px;border:1px dashed var(--line);border-radius:12px;background:var(--panel2);color:var(--muted);text-align:center;line-height:1.6; }
+html[data-theme="dark"] .offer-comparator,html[data-theme="dark"] .offer-comparison-card,html[data-theme="dark"] .data-backup { background:var(--panel);border-color:var(--line);color:var(--text); }
+html[data-theme="dark"] .offer-comparison-card { background:var(--panel2); }
+html[data-theme="dark"] .offer-comparator-selectors select { background:var(--bg)!important;border-color:var(--line)!important;color:var(--text); }
+html[data-theme="dark"] .offer-comparator-empty,html[data-theme="dark"] .offer-comparator-tie { background:var(--panel2);border-color:var(--line);color:var(--muted); }
+@media(max-width:700px) { .offer-comparison-grid { grid-template-columns:1fr; } }

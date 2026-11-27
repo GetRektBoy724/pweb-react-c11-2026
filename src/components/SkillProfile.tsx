@@ -10,6 +10,9 @@ interface SkillProfileProps {
 export function SkillProfile({ skills, onAdd, onRemove }: SkillProfileProps) {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
+  const suggestions = ["React", "TypeScript", "CSS", "JavaScript", "Python", "Git", "Node.js"]
+    .filter((suggestion) => !skills.some((skill) => skill.toLowerCase() === suggestion.toLowerCase()))
+    .slice(0, 4);
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -50,6 +53,22 @@ export function SkillProfile({ skills, onAdd, onRemove }: SkillProfileProps) {
         <button type="submit">+ Tambah</button>
       </form>
       {error && <p className="form-error">{error}</p>}
+      {suggestions.length > 0 && (
+        <div className="skill-suggestions" aria-label="Saran skill">
+          <span className="skill-suggestions-label">Tambah cepat</span>
+          {suggestions.map((skill) => (
+            <button
+              className="skill-suggestion"
+              key={skill}
+              type="button"
+              aria-label={`Tambahkan skill ${skill}`}
+              onClick={() => onAdd(skill)}
+            >
+              + {skill}
+            </button>
+          ))}
+        </div>
+      )}
       <ul className="skill-list">
         {skills.map((skill) => (
           <li key={skill} className="skill-chip">

@@ -9,24 +9,25 @@
   width: min(100%, 42rem);
   margin: 0 auto 1rem;
   padding: 0.75rem 1rem;
-  color: #fff;
-  background: #1f2430;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgb(31 36 48 / 18%);
+  box-shadow: var(--shadow);
 }
 
 .undo-toast button {
   flex: none;
   padding: 0.35rem 0.75rem;
-  color: #fff;
+  color: var(--accent);
   font: inherit;
   font-weight: 700;
-  background: transparent;
-  border: 1px solid rgb(255 255 255 / 55%);
-  border-radius: 7px;
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
   cursor: pointer;
 }
 
 .undo-toast button:hover {
-  background: rgb(255 255 255 / 12%);
+  background: color-mix(in srgb, var(--accent) 12%, var(--panel));
 }
