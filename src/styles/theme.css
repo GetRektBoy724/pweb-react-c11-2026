@@ -1,15 +1,61 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f6fb;
+  --panel: #fff;
+  --card: var(--panel);
+  --panel2: #eef1f8;
+  --line: #dfe4ee;
+  --border: var(--line);
+  --text: #151a2b;
+  --muted: #5d6785;
+  --accent: #4f46e5;
+  --accent-dark: #4338ca;
+  --ok: #059669;
+  --warn: #b45309;
+  --bad: #dc2626;
+  --shadow: 0 1px 2px rgb(20 30 60 / 6%), 0 8px 24px rgb(20 30 60 / 6%);
+  --m2-primary: var(--accent);
+  --m2-primary-soft: color-mix(in srgb, var(--accent) 18%, transparent);
+  --m2-text: var(--text);
+  --m2-muted: var(--muted);
+  --m2-border: var(--line);
+  --m2-surface: var(--panel);
+  --m2-danger: var(--bad);
+  --m2-danger-soft: color-mix(in srgb, var(--bad) 15%, transparent);
+  --m2-ok: var(--ok);
+  --m2-ok-soft: color-mix(in srgb, var(--ok) 16%, transparent);
+  --m2-warn: var(--warn);
+  --m2-warn-soft: color-mix(in srgb, var(--warn) 18%, transparent);
+}
+
 html[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #111827;
-  --card: #1f2937;
-  --text: #e5e7eb;
-  --muted: #9ca3af;
-  --border: #374151;
-  --m2-text: #e5e7eb;
-  --m2-muted: #9ca3af;
-  --m2-border: #374151;
-  --m2-surface: #1f2937;
-  --m2-primary-soft: #1e3a8a;
+  --bg: #0b0e17;
+  --panel: #121726;
+  --card: var(--panel);
+  --panel2: #1a2033;
+  --line: #262e45;
+  --border: var(--line);
+  --text: #e8ecf6;
+  --muted: #8b95b0;
+  --accent: #7c83ff;
+  --accent-dark: #969bff;
+  --ok: #34d399;
+  --warn: #fbbf24;
+  --bad: #f87171;
+  --shadow: 0 8px 28px rgb(0 0 0 / 35%);
+  --m2-primary: var(--accent);
+  --m2-primary-soft: color-mix(in srgb, var(--accent) 22%, transparent);
+  --m2-text: var(--text);
+  --m2-muted: var(--muted);
+  --m2-border: var(--line);
+  --m2-surface: var(--panel);
+  --m2-danger: var(--bad);
+  --m2-danger-soft: color-mix(in srgb, var(--bad) 18%, transparent);
+  --m2-ok: var(--ok);
+  --m2-ok-soft: color-mix(in srgb, var(--ok) 18%, transparent);
+  --m2-warn: var(--warn);
+  --m2-warn-soft: color-mix(in srgb, var(--warn) 18%, transparent);
 }
 
 html[data-theme="dark"] body {
@@ -30,18 +76,23 @@ html[data-theme="dark"] .data-backup {
 }
 
 html[data-theme="dark"] .ap-form,
-html[data-theme="dark"] .war-room,
 html[data-theme="dark"] .ap-detail {
   color: var(--m2-text);
   background: var(--m2-surface);
   border-color: var(--m2-border);
 }
 
+html[data-theme="dark"] .war-room {
+  color: var(--m2-text);
+  background: transparent;
+  border-color: transparent;
+}
+
 html[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]),
 html[data-theme="dark"] select,
 html[data-theme="dark"] textarea {
   color: var(--text);
-  background: #111827 !important;
+  background: var(--bg) !important;
   border-color: var(--border) !important;
 }
 
@@ -55,14 +106,14 @@ html[data-theme="dark"] .transition-fields select,
 html[data-theme="dark"] .inline-form input,
 html[data-theme="dark"] .offer-comparator-selectors select {
   color: var(--text);
-  background: #111827;
+  background: var(--bg);
   border-color: var(--border);
 }
 
 html[data-theme="dark"] button,
 html[data-theme="dark"] .data-backup-import {
   color: var(--text);
-  background: #273449;
+  background: var(--panel2);
   border-color: var(--border);
 }
 
@@ -75,13 +126,13 @@ html[data-theme="dark"] .transition-box > button,
 html[data-theme="dark"] .wr-actions button:first-child,
 html[data-theme="dark"] .data-backup-actions button {
   color: #fff;
-  background: #2563eb;
-  border-color: #2563eb;
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 html[data-theme="dark"] .job-card button:disabled {
   color: var(--muted);
-  background: #273449;
+  background: var(--panel2);
   border-color: var(--border);
 }
 
@@ -90,7 +141,7 @@ html[data-theme="dark"] .interview-timer,
 html[data-theme="dark"] .offer-comparator-empty,
 html[data-theme="dark"] .offer-comparator-tie {
   color: var(--text);
-  background: #111827;
+  background: var(--panel2);
   border-color: var(--border);
 }
 

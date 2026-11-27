@@ -24,6 +24,7 @@ import type { ApplicationBackup } from "./utils/backup";
 import "./styles/warroom.css";
 import "./styles/undo-toast.css";
 import "./styles/theme.css";
+import "./styles/starry-home.css";
 
 const DEFAULT_SKILLS = ["React", "TypeScript", "CSS"];
 
@@ -50,6 +51,7 @@ export default function App() {
 
   // [Member 2] Navigasi tab + lamaran yang sedang dibuka di panel detail.
   const [view, setView] = useState<View>("explore");
+  const [actionToast, setActionToast] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [pendingDelete, setPendingDelete] = useState<PendingDelete | null>(null);
   const [undoSecondsLeft, setUndoSecondsLeft] = useState(0);
@@ -73,6 +75,12 @@ export default function App() {
   useEffect(() => {
     document.documentElement.dataset.theme = isDarkMode ? "dark" : "light";
   }, [isDarkMode]);
+
+  useEffect(() => {
+    if (!actionToast) return;
+    const timeout = window.setTimeout(() => setActionToast(""), 2400);
+    return () => window.clearTimeout(timeout);
+  }, [actionToast]);
 
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
@@ -162,17 +170,19 @@ export default function App() {
         ],
       };
       setApplications((prev: Application[]) => [...prev, newApplication]);
+      setActionToast("Lowongan disimpan ke wishlist.");
     },
-    [applications, setApplications],
+    [applications, setApplications, setActionToast],
   );
 
   // [Member 2] Handler lamaran: semua update immutable.
   const addApplication = useCallback(
     (application: Application) => {
       setApplications((prev: Application[]) => [...prev, application]);
+      setActionToast("Lamaran berhasil disimpan.");
       setView("pipeline");
     },
-    [setApplications],
+    [setApplications, setActionToast],
   );
 
   const updateApplication = useCallback(
@@ -315,49 +325,32 @@ export default function App() {
   const dashboardStatistics = calculateApplicationStatistics(applications);
 
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>Aku Mw Magang</h1>
-        <p>Kelola pencarian magang Kapten dari eksplorasi sampai offer.</p>
-        <button
+    <div className="app starry-app">
+      <aside className="sidebar">
+        <a className="brand" href="#home" onClick={(event) => { event.preventDefault(); setView("explore"); }}>
+          <span className="brand-mark">✦</span><span><strong>orbit</strong><small>CAREER SPACE</small></span>
+        </a>
+        <p className="sidebar-label">WORKSPACE</p>
+        <nav className="app-nav sidebar-nav" aria-label="Navigasi utama">
+          <button type="button" aria-current={view === "explore" ? "page" : undefined} onClick={() => setView("explore")}><span>⌕</span> Cari lowongan</button>
+          <button type="button" aria-current={view === "pipeline" ? "page" : undefined} onClick={() => setView("pipeline")}><span>▤</span> Pipeline <b>{applications.length}</b></button>
+          <button type="button" aria-current={view === "add" ? "page" : undefined} onClick={() => setView("add")}><span>＋</span> Catat lamaran</button>
+          <button type="button" aria-current={view === "dashboard" ? "page" : undefined} onClick={() => setView("dashboard")}><span>▦</span> Dashboard</button>
+        </nav>
+        <div className="sidebar-bottom">
+          <div className="sidebar-tip"><span>✧</span><strong>One step closer</strong><p>Setiap lamaran membawamu ke orbit yang tepat.</p></div>
+          <button
           className="theme-toggle"
           type="button"
           aria-pressed={isDarkMode}
           onClick={() => setIsDarkMode((previous) => !previous)}
         >
-          {isDarkMode ? "Mode Terang" : "Mode Gelap"}
-        </button>
-        <nav className="app-nav">
-          <button
-            type="button"
-            aria-current={view === "explore" ? "page" : undefined}
-            onClick={() => setView("explore")}
-          >
-            Eksplorasi Lowongan
+          <span>{isDarkMode ? "☀" : "☾"}</span>{isDarkMode ? "Mode terang" : "Mode gelap"}
           </button>
-          <button
-            type="button"
-            aria-current={view === "pipeline" ? "page" : undefined}
-            onClick={() => setView("pipeline")}
-          >
-            Pipeline Lamaran ({applications.length})
-          </button>
-          <button
-            type="button"
-            aria-current={view === "add" ? "page" : undefined}
-            onClick={() => setView("add")}
-          >
-            + Catat Lamaran
-          </button>
-          <button
-            type="button"
-            aria-current={view === "dashboard" ? "page" : undefined}
-            onClick={() => setView("dashboard")}
-          >
-            Dashboard
-          </button>
-        </nav>
-      </header>
+          <div className="profile-mini"><span className="avatar">K</span><span><strong>Kapten</strong><small>Job seeker</small></span><span className="profile-dots">···</span></div>
+        </div>
+      </aside>
+      <main className="workspace">
 
       {pendingDelete && (
         <div className="undo-toast" role="status" aria-live="polite">
@@ -369,9 +362,16 @@ export default function App() {
           </button>
         </div>
       )}
+      {actionToast && (
+        <div className="action-toast" role="status" aria-live="polite">
+          {actionToast}
+        </div>
+      )}
 
       {view === "explore" && (
         <>
+          <header className="page-top"><div><span className="eyebrow">WORKSPACE / EXPLORE</span><h1>Cari lowongan</h1><p>Temukan peluang yang sesuai dengan skill dan minatmu.</p></div><div className="top-status"><span></span> Siap menjelajah</div></header>
+          <div className="explore-layout"><div className="explore-primary">
           <SkillProfile
             skills={kaptenSkills}
             onAdd={(skill) => setKaptenSkills((prev) => [...prev, skill])}
@@ -381,8 +381,8 @@ export default function App() {
           />
 
           <section className="exploration">
-            <h2>Eksplorasi Lowongan</h2>
-            <div className="source-toggle">
+            <div className="section-heading"><div><span className="eyebrow">OPPORTUNITY FEED</span><h2>Jelajahi lowongan</h2></div><span className="live-pill"><i/> LIVE</span></div>
+            <div className="source-toggle source-select" role="radiogroup" aria-label="Sumber lowongan">
               <label>
                 <input
                   type="radio"
@@ -422,15 +422,16 @@ export default function App() {
             )}
             {fetchState.kind === "success" && (
               <>
-                <JobSearchBar
+                <div className="search-panel"><JobSearchBar
                   keyword={keyword}
                   onKeywordChange={setKeyword}
                   searchInputRef={searchInputRef}
                   categories={categories}
                   category={category}
                   onCategoryChange={setCategory}
-                />
-                <p className="count">{visibleJobs.length} lowongan</p>
+                /><span className="search-shortcut">/</span></div>
+                <div className="feed-toolbar" id="job-results"><p className="count"><strong>{visibleJobs.length}</strong> peluang ditemukan</p><span>Diurutkan berdasarkan skill match</span></div>
+                {categories.length > 0 && <div className="quick-categories" aria-label="Filter kategori"><button aria-pressed={!category} className={!category ? "active" : ""} type="button" onClick={() => setCategory("")}>Semua</button>{categories.map((item) => <button aria-pressed={category === item} className={category === item ? "active" : ""} key={item} type="button" onClick={() => setCategory(category === item ? "" : item)}>{item}</button>)}</div>}
                 <JobList
                   jobs={visibleJobs}
                   kaptenSkills={kaptenSkills}
@@ -441,6 +442,7 @@ export default function App() {
               </>
             )}
           </section>
+          </div><aside className="explore-aside"><section className="aside-card"><span className="aside-icon">✧</span><span className="eyebrow">YOUR PROFILE</span><h3>Skill constellation</h3><p>Lowongan dengan skill yang cocok akan muncul lebih dulu.</p><div className="skill-meter"><span style={{ width: `${Math.min(kaptenSkills.length * 15, 100)}%` }}/></div><small>{kaptenSkills.length} skill aktif</small></section><section className="aside-card source-card"><span className="eyebrow">DATA SOURCE</span><h3>{source === "remote" ? "Remotive API" : "Katalog lokal"}</h3><p>{source === "remote" ? "Peluang terbaru dari seluruh dunia." : "Kumpulan lowongan siap dijelajahi."}</p><button type="button" onClick={() => changeSource(source === "remote" ? "fallback" : "remote")}>Ganti sumber <span>↗</span></button></section><p className="aside-foot">Dibuat untuk perjalanan kariermu <span>✦</span></p></aside></div>
         </>
       )}
 
@@ -468,13 +470,29 @@ export default function App() {
       )}
 
       {view === "add" && (
-        <ApplicationForm applications={applications} onAdd={addApplication} />
+        <>
+          <header className="page-top">
+            <div>
+              <span className="eyebrow">WORKSPACE / CATAT LAMARAN</span>
+              <h1>Catat Lamaran</h1>
+              <p>Simpan lamaran yang sudah dikirim atau peluang yang ingin kamu incar.</p>
+            </div>
+          </header>
+          <ApplicationForm applications={applications} onAdd={addApplication} />
+        </>
       )}
 
       {view === "dashboard" && (
-        <main className="dashboard-page">
+        <div className="dashboard-page">
+          <header className="page-top">
+            <div>
+              <span className="eyebrow">WORKSPACE / DASHBOARD</span>
+              <h1>Dashboard Lamaran</h1>
+              <p>Ringkasan progres pencarian kerja dan data lamaranmu.</p>
+            </div>
+          </header>
           <section aria-labelledby="dashboard-title">
-            <h2 id="dashboard-title">Dashboard Lamaran</h2>
+            <h2 id="dashboard-title" className="dashboard-section-title">Ringkasan progres</h2>
             <DashboardStats statistics={dashboardStatistics} />
           </section>
           <OfferComparator
@@ -486,8 +504,9 @@ export default function App() {
             kaptenSkills={kaptenSkills}
             onImport={importBackup}
           />
-        </main>
+        </div>
       )}
+      </main>
     </div>
   );
 }
