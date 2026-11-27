@@ -49,3 +49,13 @@
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+
+.interview-timer { gap:12px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--panel2);color:var(--text); }
+.interview-timer-heading h3 { color:var(--text);font-size:15px; }.interview-timer-heading p { color:var(--muted); }
+.interview-timer-clock { color:var(--accent);font-size:28px; }
+.interview-timer-question { line-height:1.6; }
+.interview-timer-finished { color:var(--warn); }
+.interview-timer-actions button { padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font:inherit;font-size:12px;font-weight:600;cursor:pointer; }
+.interview-timer-actions button:first-child { border-color:var(--accent);background:var(--accent);color:#fff; }
+.interview-timer-actions button:hover:not(:disabled) { transform:translateY(-1px); }
+.interview-timer-actions button:disabled { opacity:.55;cursor:not-allowed; }
